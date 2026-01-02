@@ -1,6 +1,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <string_view>
 
 enum class OrderType
 {
@@ -22,9 +23,18 @@ private:
     double m_microprice {0.0};
 
 public:
+    OrderBook(std::string_view ticker)
+        : m_assetTicker {ticker}
+        {}
+
     void addOrder(Order order)
     {
         std::vector<Order>& orderVector {order.isBid() ? m_bids : m_asks};
+    }
+
+    void calculateMidPrice()
+    {
+
     }
 };
 
@@ -38,6 +48,18 @@ private:
 public:
     bool isBid() {return orderIsBid;}
 };
+
+/*
+TODO: find the midprice and set it to the member
+
+1) filter the bid and ask vectors to only include orders with a price
+
+2) take the highest bid and lowest ask
+
+3) set the average to midprice member var
+
++) calculate the weighted averages and set microprice
+*/
 
 int main()
 {
