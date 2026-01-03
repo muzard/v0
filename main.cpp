@@ -33,9 +33,24 @@ public:
         std::vector<Order>& orderVector {order.isBid() ? m_bids : m_asks};
     }
 
-    void calculateMidPrice() 
+    void setMidPrice() 
     {
         m_midprice = ((findMaxBid(m_bids) + findMinAsk(m_asks)) / 2);
+    }
+
+    void setMicroPrice()
+    {
+        const double bestBid = findMaxBid(m_bids);
+        const double bestAsk = findMinAsk(m_asks);
+        const int bidVolume = findVolume(bestBid, m_bids);
+        const int askVolume = findVolume(bestAsk, m_asks);
+        const int totalVolume = bidVolume + askVolume;
+
+        const double buySide = (bidVolume / totalVolume) * bestBid;
+        const double sellSide = (askVolume / totalVolume) * bestAsk;
+
+        m_microprice = buySide + sellSide;
+
     }
 };
 
@@ -49,9 +64,10 @@ private:
 public:
     bool isBid() const {return orderIsBid;}
     std::optional<double> getPrice() const {return m_mainPrice;}
+    int getVolume() const {return m_size;}
 };
 
-double findMaxBid(std::vector<Order>& bidVector)
+double findMaxBid(const std::vector<Order>& bidVector)
 {
     double highestBid = -1; // for finding min
     for (const Order& order : bidVector)
@@ -69,10 +85,10 @@ double findMaxBid(std::vector<Order>& bidVector)
     return highestBid;
 }
 
-double findMinAsk(std::vector<Order>& bidVector)
+double findMinAsk(const std::vector<Order>& askVector)
 {
     double lowestAsk = std::numeric_limits<double>::max(); // for finding min
-    for (const Order& order : bidVector)
+    for (const Order& order : askVector)
     {
         std::optional<double> price {order.getPrice()};
         // if order isn't market order and price is lower than min, set to min
@@ -86,17 +102,19 @@ double findMinAsk(std::vector<Order>& bidVector)
 
     return lowestAsk;
 }
-/*
-TODO: find the midprice and set it to the member
 
-1) filter the bid and ask vectors to only include orders with a price
-
-2) take the highest bid and lowest ask
-
-3) set the average to midprice member var
-
-+) calculate the weighted averages and set microprice
-*/
+int findVolume(double price, const std::vector<Order>& orders)
+{
+    int volume = 0;
+    for (const Order& order : orders)
+    {
+        const auto orderPrice = order.getPrice();
+        if (orderPrice && orderPrice.value() == price)
+        {
+            volume += order.getVolume();
+        }
+    }
+}
 
 int main()
 {
