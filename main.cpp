@@ -35,7 +35,7 @@ public:
 
     void calculateMidPrice() 
     {
-
+        m_midprice = ((findMaxBid(m_bids) + findMinAsk(m_asks)) / 2);
     }
 };
 
