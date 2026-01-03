@@ -51,24 +51,41 @@ public:
     std::optional<double> getPrice() const {return m_mainPrice;}
 };
 
-double findMinBid(std::vector<Order>& bidVector)
+double findMaxBid(std::vector<Order>& bidVector)
 {
-    double currentMin = std::numeric_limits<double>::max(); // for finding min
+    double highestBid = -1; // for finding min
     for (const Order& order : bidVector)
     {
         std::optional<double> price {order.getPrice()};
-        // if order isn't market order and price is lower than min, set to min
-        if (price && price.value() < currentMin)
+        // if order isn't market order and price is higher than max, set to min
+        if (price && price.value() > highestBid)
         {
-            currentMin = price.value();
+            highestBid = price.value();
         } 
     }
 
     // TODO: add exception if currentMin didn't change (only market orders)
 
-    return currentMin;
+    return highestBid;
 }
 
+double findMinAsk(std::vector<Order>& bidVector)
+{
+    double lowestAsk = std::numeric_limits<double>::max(); // for finding min
+    for (const Order& order : bidVector)
+    {
+        std::optional<double> price {order.getPrice()};
+        // if order isn't market order and price is lower than min, set to min
+        if (price && price.value() < lowestAsk)
+        {
+            lowestAsk = price.value();
+        } 
+    }
+
+    // TODO: add exception if currentMin didn't change (only market orders)
+
+    return lowestAsk;
+}
 /*
 TODO: find the midprice and set it to the member
 
