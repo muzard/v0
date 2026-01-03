@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <string_view>
+#include <limits>
 
 enum class OrderType
 {
@@ -32,7 +33,7 @@ public:
         std::vector<Order>& orderVector {order.isBid() ? m_bids : m_asks};
     }
 
-    void calculateMidPrice()
+    void calculateMidPrice() 
     {
 
     }
@@ -46,8 +47,27 @@ private:
     std::optional<int> m_icebergVisibleSize{}; // size of the iceberg "peak"
     bool orderIsBid {1}; // true if bid, assumed to be true
 public:
-    bool isBid() {return orderIsBid;}
+    bool isBid() const {return orderIsBid;}
+    std::optional<double> getPrice() const {return m_mainPrice;}
 };
+
+double findMinBid(std::vector<Order>& bidVector)
+{
+    double currentMin = std::numeric_limits<double>::max(); // for finding min
+    for (const Order& order : bidVector)
+    {
+        std::optional<double> price {order.getPrice()};
+        // if order isn't market order and price is lower than min, set to min
+        if (price && price.value() < currentMin)
+        {
+            currentMin = price.value();
+        } 
+    }
+
+    // TODO: add exception if currentMin didn't change (only market orders)
+
+    return currentMin;
+}
 
 /*
 TODO: find the midprice and set it to the member
