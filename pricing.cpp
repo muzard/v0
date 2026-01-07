@@ -1,40 +1,51 @@
-#pragma once
 #include "pricing.hpp"
 
-double findMaxBid(const std::vector<Order>& bidVector)
+Order& findMaxBid(std::vector<Order>& bidVector)
 {
-    double highestBid = -1; // for finding min
-    for (const Order& order : bidVector)
+    Order* highestBidOrder {};
+    double highestBidAmount = -1; // for finding min
+    for (Order& order : bidVector)
     {
         std::optional<double> price {order.getPrice()};
         // if order isn't market order and price is higher than max, set to min
-        if (price && price.value() > highestBid)
+        if (price && price.value() > highestBidAmount)
         {
-            highestBid = price.value();
+            highestBidAmount = price.value();
+            highestBidOrder = &order;
         } 
     }
 
     // TODO: add exception if currentMin didn't change (only market orders)
 
-    return highestBid;
+    return *highestBidOrder;
 }
 
-double findMinAsk(const std::vector<Order>& askVector)
+Order& findMinAsk(std::vector<Order>& askVector)
 {
-    double lowestAsk = std::numeric_limits<double>::max(); // for finding min
-    for (const Order& order : askVector)
+    Order* lowestAskOrder {};
+    double lowestAskAmount = std::numeric_limits<double>::max(); // for finding min
+    for (Order& order : askVector)
     {
         std::optional<double> price {order.getPrice()};
         // if order isn't market order and price is lower than min, set to min
-        if (price && price.value() < lowestAsk)
+        if (price && price.value() < lowestAskAmount)
         {
-            lowestAsk = price.value();
+            lowestAskAmount = price.value();
+            lowestAskOrder = &order;
         } 
     }
 
     // TODO: add exception if currentMin didn't change (only market orders)
 
-    return lowestAsk;
+    return *lowestAskOrder;
+}
+
+Order& findNearestToMid(const std::vector<Order>& orders, const bool isBid) 
+{
+    if (isBid)
+        return findMaxBid(orders);
+    else
+        return findMinAsk(orders);
 }
 
 int findVolume(double price, const std::vector<Order>& orders)
@@ -50,4 +61,22 @@ int findVolume(double price, const std::vector<Order>& orders)
     }
 
     return volume;
+}
+
+bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
+{
+    // TODO return the orders that were filled
+    switch (order.getOrderType())
+    {
+    using enum OrderType;
+    case market:
+        while (order.getVolume() > 0)
+        {
+            
+        } 
+        break;
+    
+    default:
+        break;
+    }
 }

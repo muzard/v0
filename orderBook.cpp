@@ -1,4 +1,3 @@
-#pragma once
 #include "orderBook.hpp"
 #include "pricing.hpp"
 
@@ -10,7 +9,7 @@ OrderBook::OrderBook(std::string_view ticker)
 void OrderBook::addOrder(Order order)
     {
         std::vector<Order>& orderVector {order.isBid() ? m_bids : m_asks};
-        // TODO: implement adding the order to the vector
+        // TODO implement adding order
     }
 
 void OrderBook::setMidPrice() 
@@ -33,3 +32,4 @@ void OrderBook::setMicroPrice()
         m_microprice = buySide + sellSide;
 
     }
+
