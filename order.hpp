@@ -22,6 +22,7 @@ private:
 public:
     bool isBid() const {return m_isBid;}
     std::optional<double> getPrice() const {return m_mainPrice;}
+    double getPriceOrZero() const {return m_mainPrice || 0;} // DANGEROUS
 
     int getVolume() const {return m_size;}
     OrderType getOrderType() const {return m_orderType;}

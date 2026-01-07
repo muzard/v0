@@ -14,13 +14,13 @@ void OrderBook::addOrder(Order order)
 
 void OrderBook::setMidPrice() 
     {
-        m_midprice = ((findMaxBid(m_bids) + findMinAsk(m_asks)) / 2);
+        m_midprice = ((findMaxBid(m_bids).getPriceOrZero() + findMinAsk(m_asks).getPriceOrZero()) / 2);
     }
 
 void OrderBook::setMicroPrice()
     {
-        const double bestBid = findMaxBid(m_bids);
-        const double bestAsk = findMinAsk(m_asks);
+        const double bestBid = findMaxBid(m_bids).getPriceOrZero();
+        const double bestAsk = findMinAsk(m_asks).getPriceOrZero();
         const int bidVolume = findVolume(bestBid, m_bids);
         const int askVolume = findVolume(bestAsk, m_asks);
         const double totalVolume = bidVolume + askVolume;

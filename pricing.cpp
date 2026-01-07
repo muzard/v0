@@ -42,7 +42,7 @@ Order& findMinAsk(std::vector<Order>& askVector)
 
 Order& findNearestToMid(const std::vector<Order>& orders, const bool isBid) 
 {
-    if (isBid)
+    if (!isBid)
         return findMaxBid(orders);
     else
         return findMinAsk(orders);
@@ -66,13 +66,14 @@ int findVolume(double price, const std::vector<Order>& orders)
 bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
 {
     // TODO return the orders that were filled
+    const bool isBid = order.isBid();
     switch (order.getOrderType())
     {
     using enum OrderType;
     case market:
         while (order.getVolume() > 0)
         {
-            
+            // const Order& optimalOpposingOrder {findNearestToMid(opposingOrders, )}
         } 
         break;
     
