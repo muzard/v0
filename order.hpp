@@ -14,16 +14,16 @@ enum class OrderType
 
 class Order
 {
-private:
+private: 
     inline static int nextId {0};
     int m_size {}; // trade only full units for simplicity
-    std::optional<double> m_mainPrice {}; // main price for orders other than market
+    double m_mainPrice {0}; // main price for orders, 0 for market
     std::optional<int> m_icebergVisibleSize{}; // size of the iceberg "peak"
     bool m_isBid {1}; // true if bid, assumed to be true
     OrderType m_orderType {OrderType::market};
     int m_id {0};
 public:
-    Order(int volume, std::optional<double> price, std::optional<int> icebergSize, bool isBid, OrderType orderType)
+    Order(int volume, std::optional<int> icebergSize, bool isBid, OrderType orderType, double price=0.0)
         : m_size {volume}, m_mainPrice {price}, m_icebergVisibleSize {icebergSize}
         , m_isBid {isBid}, m_orderType {orderType}, m_id {++nextId}
         {}

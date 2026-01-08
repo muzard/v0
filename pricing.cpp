@@ -84,12 +84,44 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
         while (order.getVolume() > 0)
         {   // find the lowest order matching this
             Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
-            if (optimalOpposingOrder.getPriceOrZero() != 0 && optimalOpposingOrder.getPriceOrZero() <= order.getPrice())
+            if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
                 optimalOpposingOrder.fillOrder(order.getVolume());
+            else break; // break if price is over limit
             if (order.getVolume() == 0)
                 return true;
         }
         return false; // if we haven't cleared the order before hitting the limit
+    case fillAndKill: // works like limit, except do not post the order after
+        while (order.getVolume() > 0)
+        {   // find the lowest order matching this
+            Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
+            if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
+                optimalOpposingOrder.fillOrder(order.getVolume());
+            else break;
+        }
+        return true; // kill order after filling
+    case fillOrKill:
+        int volumeUnderLimitPrice {0};
+        // calculate the volume under orders price
+        for (Order& opposingOrder: opposingOrders)
+        {
+            if (opposingOrder.getPrice() <= order.getPrice())
+                volumeUnderLimitPrice += opposingOrder.getVolume();
+        }
+
+        if (volumeUnderLimitPrice <= order.getVolume()) // fill
+        {
+            while (order.getVolume() > 0)
+            {   
+                Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
+                if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
+                    optimalOpposingOrder.fillOrder(order.getVolume());
+                else break;
+            }    
+        } else // kill
+        {
+            return true;
+        }
     default:
         return true; // don't add orders we haven't implemented yet
     }
