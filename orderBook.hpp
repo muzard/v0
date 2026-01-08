@@ -22,4 +22,6 @@ public:
     void setMidPrice();
 
     void setMicroPrice();
+
+    void setPrices();
 };

@@ -35,3 +35,8 @@ void OrderBook::setMicroPrice()
 
     }
 
+void OrderBook::setPrices()
+{
+    setMidPrice();
+    setMicroPrice();
+}

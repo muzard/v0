@@ -101,6 +101,7 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
         }
         return true; // kill order after filling
     case fillOrKill:
+    {
         int volumeUnderLimitPrice {0};
         // calculate the volume under orders price
         for (Order& opposingOrder: opposingOrders)
@@ -122,6 +123,7 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
         {
             return true;
         }
+    }
     default:
         return true; // don't add orders we haven't implemented yet
     }
