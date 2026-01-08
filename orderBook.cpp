@@ -12,6 +12,7 @@ void OrderBook::addOrder(Order order)
         // fill order, if it didn't fill (false) add it to the book
         if (!(fillOrder(order)))
             orderVector.push_back(order);
+            setPrices();
     }
 
 void OrderBook::setMidPrice() 
