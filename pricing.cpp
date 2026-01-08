@@ -54,7 +54,7 @@ int findVolume(double price, const std::vector<Order>& orders)
     for (const Order& order : orders)
     {
         const auto orderPrice = order.getPrice();
-        if (orderPrice && orderPrice.value() == price)
+        if (orderPrice == price)
         {
             volume += order.getVolume();
         }
@@ -84,7 +84,7 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
         while (order.getVolume() > 0)
         {   // find the lowest order matching this
             Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
-            if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
+            if (optimalOpposingOrder.getPrice() <= order.getPrice()) 
                 optimalOpposingOrder.fillOrder(order.getVolume());
             else break; // break if price is over limit
             if (order.getVolume() == 0)
@@ -95,7 +95,7 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
         while (order.getVolume() > 0)
         {   // find the lowest order matching this
             Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
-            if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
+            if (optimalOpposingOrder.getPrice() <= order.getPrice()) 
                 optimalOpposingOrder.fillOrder(order.getVolume());
             else break;
         }
@@ -114,7 +114,7 @@ bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
             while (order.getVolume() > 0)
             {   
                 Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
-                if (optimalOpposingOrder.getPriceOrZero() <= order.getPrice()) 
+                if (optimalOpposingOrder.getPrice() <= order.getPrice()) 
                     optimalOpposingOrder.fillOrder(order.getVolume());
                 else break;
             }    

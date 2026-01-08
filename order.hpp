@@ -17,7 +17,7 @@ class Order
 private: 
     inline static int nextId {0};
     int m_size {}; // trade only full units for simplicity
-    double m_mainPrice {0}; // main price for orders, 0 for market
+    double m_mainPrice {0.0}; // main price for orders, 0 for market
     std::optional<int> m_icebergVisibleSize{}; // size of the iceberg "peak"
     bool m_isBid {1}; // true if bid, assumed to be true
     OrderType m_orderType {OrderType::market};
@@ -29,8 +29,7 @@ public:
         {}
 
     bool isBid() const {return m_isBid;}
-    std::optional<double> getPrice() const {return m_mainPrice;}
-    double getPriceOrZero() const {return m_mainPrice || 0;} // DANGEROUS
+    double getPrice() const {return m_mainPrice;}
 
     int getVolume() const {return m_size;}
     OrderType getOrderType() const {return m_orderType;}
