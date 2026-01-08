@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/arttu/Projects/LimitOrderBook/v0/main'
+relocations:     []
+...

@@ -27,8 +27,22 @@ public:
     int getVolume() const {return m_size;}
     OrderType getOrderType() const {return m_orderType;}
 
-    void editSize(int toFill)
+    // returns num of units filled
+    int fillOrder(int toFill)
     {
-        m_size -= toFill;
+        if (toFill >= m_size)
+        {
+            const int temp {m_size}; // TODO make sure this copies -> works
+            m_size = 0;
+            // REMOVE FROM ASK/BID LIST
+
+            return temp;
+        }
+        else
+        {
+            const int temp {toFill - m_size};
+            m_size -= toFill;
+            return temp;
+        }
     }
 };

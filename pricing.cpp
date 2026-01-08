@@ -40,9 +40,9 @@ Order& findMinAsk(std::vector<Order>& askVector)
     return *lowestAskOrder;
 }
 
-Order& findNearestToMid(const std::vector<Order>& orders, const bool isBid) 
+Order& findNearestToMid(std::vector<Order>& orders, const bool checkBids) 
 {
-    if (!isBid)
+    if (checkBids)
         return findMaxBid(orders);
     else
         return findMinAsk(orders);
@@ -63,21 +63,34 @@ int findVolume(double price, const std::vector<Order>& orders)
     return volume;
 }
 
+// returns bool if order needs to be added to the books
 bool fillOrder(Order& order, std::vector<Order>& opposingOrders)
 {
     // TODO return the orders that were filled
+    // add some kind of notification for filling (bidder and asker)?
     const bool isBid = order.isBid();
     switch (order.getOrderType())
     {
     using enum OrderType;
     case market:
         while (order.getVolume() > 0)
-        {
-            // const Order& optimalOpposingOrder {findNearestToMid(opposingOrders, )}
-        } 
-        break;
-    
+        {   // find the lowest order matching this
+            // and fill until filled. will walk the book
+            Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)};
+            optimalOpposingOrder.fillOrder(order.getVolume());
+        }
+        return true; 
+    case limit:
+        while (order.getVolume() > 0)
+        {   // find the lowest order matching this
+            Order& optimalOpposingOrder {findNearestToMid(opposingOrders, !isBid)}; // order.getPrice() is safe as this cannot be a market order
+            if (optimalOpposingOrder.getPriceOrZero() != 0 && optimalOpposingOrder.getPriceOrZero() <= order.getPrice())
+                optimalOpposingOrder.fillOrder(order.getVolume());
+            if (order.getVolume() == 0)
+                return true;
+        }
+        return false; // if we haven't cleared the order before hitting the limit
     default:
-        break;
+        return true; // don't add orders we haven't implemented yet
     }
 }

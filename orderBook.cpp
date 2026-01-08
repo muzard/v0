@@ -9,7 +9,9 @@ OrderBook::OrderBook(std::string_view ticker)
 void OrderBook::addOrder(Order order)
     {
         std::vector<Order>& orderVector {order.isBid() ? m_bids : m_asks};
-        // TODO implement adding order
+        // fill order, if it didn't fill (false) add it to the book
+        if (!(fillOrder(order)))
+            orderVector.push_back(order);
     }
 
 void OrderBook::setMidPrice() 

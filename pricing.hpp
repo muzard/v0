@@ -2,8 +2,9 @@
 #include "order.hpp"
 #include <vector>
 
-Order& findMaxBid(const std::vector<Order>& bidVector);
-Order& findMinAsk(const std::vector<Order>& askVector);
+Order& findMaxBid(std::vector<Order>& bidVector);
+Order& findMinAsk(std::vector<Order>& askVector);
 int findVolume(double price, const std::vector<Order>& orders);
 bool fillOrder(Order& order);
-Order& findNearestToMid(const std::vector<Order>& orders, const bool isBid);
+Order& findNearestToMid(std::vector<Order>& orders, const bool isBid);
+bool fillOrder(Order& order, std::vector<Order>& opposingOrders);
