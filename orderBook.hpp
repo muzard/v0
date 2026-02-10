@@ -1,27 +1,26 @@
-#pragma once
-#include <string>
-#include <string_view>
-#include <vector>
-
-#include "order.hpp"
+#include <map>
+#include <functional>
+#include "PriceLevel.hpp"
 
 class OrderBook
 {
 private:
-    std::string m_assetTicker {"????"};
-    std::vector<Order> m_bids{}; // vector holding asks
-    std::vector<Order> m_asks{};// vector holding bids
-    double m_midprice {0.0};
-    double m_microprice {0.0};
+    std::map<int, PriceLevel, std::greater<int>> bids {}; // map of price keys in ticks and order queues as values
+    std::map<int, PriceLevel> asks {};
+public: // TODO: add matching before adding new orders
+    void addBid(Order o, int price)
+    {
+        if (bids.contains(price))
+            bids[price].addOrder(o);
+        else
+            bids[price] = PriceLevel{o} 
+    }
 
-public:
-    explicit OrderBook(std::string_view ticker);
-
-    void addOrder(Order order);
-
-    void setMidPrice();
-
-    void setMicroPrice();
-
-    void setPrices();
+    void addAsk(Order o, int price)
+    {
+        if (asks.contains(price))
+            asks[price].addOrder(o);
+        else
+            asks[price] = PriceLevel{o} 
+    }
 };
