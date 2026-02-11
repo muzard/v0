@@ -10,13 +10,13 @@ private:
 public: // TODO: add matching before adding new orders
     void addBid(Order o, int price)
     {
-        auto [it, inserted] = bids.emplace(price, PriceLevel{o});
+        auto [it, inserted] = bids.emplace(price, PriceLevel{});
         it->second.addOrder(o);
     }
 
     void addAsk(Order o, int price)
     {
-        auto [it, inserted] = asks.emplace(price, PriceLevel{o});
+        auto [it, inserted] = asks.emplace(price, PriceLevel{});
         it->second.addOrder(o);
     }
 };

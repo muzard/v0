@@ -1,13 +1,13 @@
 #pragma once
 
 #include <deque>
-#include "Order.hpp"
+#include "BookOrder.hpp"
 
 struct PriceLevel
 {
-    std::deque<Order> orders {}; // queue of orders
+    std::deque<BookOrder> orders {}; // queue of orders
 
-    void addOrder(Order o)
+    void addOrder(BookOrder o)
     {
         orders.push_back(o);
     }
