@@ -1,20 +1,23 @@
 #include "OrderBook.hpp"
+#include "Matcher.hpp"
+#include "Order.hpp"
 
 int main()
 {
     OrderBook orderBook;
+    Matcher matcher{orderBook};
 
     // Create some sample orders
-    Order buyOrder1 = {1, 1};  // id, quantity
-    Order buyOrder2 = {2, 2};
-    Order sellOrder1 = {3, 1};
-    Order sellOrder2 = {4, 2};
+    BookOrder buyOrder1 = {1, 1};  // id, quantity
+    BookOrder buyOrder2 = {2, 2};
 
     // Add orders to the order book
-    orderBook.addBid(buyOrder1, 100);
-    orderBook.addBid(buyOrder2, 101);
-    orderBook.addAsk(sellOrder1, 102);
-    orderBook.addAsk(sellOrder2, 103);
+    orderBook.addBid(buyOrder1, 101);
+    orderBook.addBid(buyOrder2, 201);
+
+    Order sellOrder {3, 100, true, 10, OrderType::limit};
+
+    matcher.match(sellOrder);
 
     return 0;
 }
