@@ -1,40 +1,26 @@
+#include <cassert>
 #include <iostream>
-#include <optional>
-#include "order.hpp"
-#include "orderBook.hpp"
 
-// Small compatibility stub: the project declares a single-arg fillOrder in pricing.hpp
-// but some builds don't provide it. Provide a no-op implementation here so tests
-// can exercise the public API without changing project sources.
-bool fillOrder(Order& /*order*/)
+#include "../OrderBook.hpp"
+#include "../Matcher.hpp"
+
+void test(OrderBook& ob, Matcher& matcher)
 {
-    return false; // indicate "not filled" so orders get posted to the book
-}
+    // populate order book with asks on different price levels
+    BookOrder ask1 {1, 1}; // id, quantity
+    BookOrder ask2 {2, 2};
+    BookOrder ask3 {3, 3};
+    ob.addAsk(ask1, 1);
+    ob.addAsk(ask2, 2);
+    ob.addAsk(ask3, 3);
 
-int main()
-{
-    OrderBook ob{"TEST"};
+    // Test matching a bid order
+    Order bid {4, 4, true, 8, OrderType::limit}; // id, price, isBid, quantity, type
+    matcher.match(bid);
 
-    // Populate the book with realistic depth on both sides.
-    // Several prices and multiple orders per price.
-    for (int price = 100; price >= 91; --price) {
-        for (int i = 0; i < 3; ++i) {
-            // bids: isBid = true
-            ob.addOrder(Order(10 + i, std::nullopt, true, OrderType::limit, static_cast<double>(price)));
-        }
-    }
-
-    for (int price = 101; price <= 110; ++price) {
-        for (int i = 0; i < 3; ++i) {
-            // asks: isBid = false
-            ob.addOrder(Order(5 + i, std::nullopt, false, OrderType::limit, static_cast<double>(price)));
-        }
-    }
-
-    // Call the price calculation routines — they should run without crashing
-    ob.setMidPrice();
-    ob.setMicroPrice();
-
-    std::cout << "Test completed: order book populated and price calculations executed." << std::endl;
-    return 0;
+    // expect book to have PriceLevel 4, including order with id 4 and quantity 2 
+    const auto& bids = ob.getBids();
+    assert(bids.contains(4));
+    assert(bids.at(4).orders.front().quantity == 2);
+    std::cout << "test succeeded"; 
 }

@@ -22,5 +22,11 @@ public: // TODO: add matching before adding new orders
         it->second.addOrder(o);
     }
 
+    // unsafe, used for testing for now
+    std::map<int, PriceLevel, std::greater<int>>& getBids()
+    {
+        return bids;
+    }
+
     friend class Matcher;
 };
