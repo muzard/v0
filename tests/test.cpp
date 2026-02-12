@@ -26,5 +26,14 @@ void test(OrderBook& ob, Matcher& matcher)
     assert(bids.at(4).orders.front().quantity == 2);
 
     assert(asks.empty());
-    std::cout << "test succeeded\n"; 
+    std::cout << "asks were cleared and partially filled bid was added to book\n";
+
+    Order counterOrder {5, 4, false, 2, OrderType::limit};
+    matcher.match(counterOrder);
+
+    const auto& newBids = ob.getBids();
+    const auto& newAsks = ob.getAsks();
+    assert(newBids.empty());
+    assert(newAsks.empty());
+    std::cout << "whole book clears when offer is countered\n";
 }
