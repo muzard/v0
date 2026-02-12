@@ -28,5 +28,7 @@ public: // TODO: add matching before adding new orders
         return bids;
     }
 
+    std::map<int, PriceLevel>& getAsks() {return asks;}
+
     friend class Matcher;
 };

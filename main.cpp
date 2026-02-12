@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "OrderBook.hpp"
 #include "Matcher.hpp"
 #include "Order.hpp"
@@ -10,6 +12,7 @@ int main()
     Matcher matcher{orderBook};
 
     test(orderBook, matcher);
+    std::cout << "exited test()\n";
 
     return 0;
 }

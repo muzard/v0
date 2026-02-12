@@ -6,6 +6,7 @@
 
 void test(OrderBook& ob, Matcher& matcher)
 {
+    std::cout << "entered tester \n";
     // populate order book with asks on different price levels
     BookOrder ask1 {1, 1}; // id, quantity
     BookOrder ask2 {2, 2};
@@ -20,7 +21,10 @@ void test(OrderBook& ob, Matcher& matcher)
 
     // expect book to have PriceLevel 4, including order with id 4 and quantity 2 
     const auto& bids = ob.getBids();
+    const auto& asks = ob.getAsks();
     assert(bids.contains(4));
     assert(bids.at(4).orders.front().quantity == 2);
-    std::cout << "test succeeded"; 
+
+    assert(asks.empty());
+    std::cout << "test succeeded\n"; 
 }
