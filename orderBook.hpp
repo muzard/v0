@@ -22,13 +22,12 @@ public: // TODO: add matching before adding new orders
         it->second.addOrder(o);
     }
 
-    // unsafe, used for testing for now
-    std::map<int, PriceLevel, std::greater<int>>& getBids()
+    const std::map<int, PriceLevel, std::greater<int>>& getBids() const
     {
         return bids;
     }
 
-    std::map<int, PriceLevel>& getAsks() {return asks;}
+    const std::map<int, PriceLevel>& getAsks() const {return asks;}
 
     friend class Matcher;
 };
