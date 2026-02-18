@@ -8,7 +8,7 @@ class OrderBook
 {
 private:
     std::map<int, PriceLevel, std::greater<int>> bids {}; // map of price keys in ticks and order queues as values
-    std::map<int, PriceLevel> asks {};
+    std::map<int, PriceLevel, std::less<int>> asks {};
 public: // TODO: add matching before adding new orders
     void addBid(BookOrder o, int price)
     {
